@@ -1,6 +1,6 @@
 ---
 title: "PS270 Final Project"
-author: "Your Name Here"
+author: "Sam Schallert"
 description: "My final project"
 output:
   distill::distill_article:
@@ -11,4 +11,33 @@ output:
 
 ## Project thoughts
 
-I am interested in exploring data related to...
+I am interested in exploring data related to sports and political voting based on party/ideals. Both these topics intrest me and I feel there is a lot of data about each of them. 
+
+## Milestone 2: Research Proposal
+ 
+This project utilizes the "NFL Scores and Betting Data" dataset to investigate the relationship between market expectations and actual game outcomes. My research question asks: To what extent does the closing point spread set by oddsmakers predict the actual margin of victory in NFL games? I hypothesize that there is a strong, positive linear relationship between the spread and the final score margin. This hypothesis is rooted in the Efficient Market Hypothesis, which suggests that in a competitive environment with high financial stakes, betting lines will systematically incorporate all publicly available information regarding team strength, injuries, and conditions. My explanatory variable is the spread_favorite, which measures the number of points the favored team is expected to win by (ranging from -1 to -26.5 in this data). My outcome variable is the actual_margin, calculated as the home team's score minus the away team's score. A statistically significant, positive regression coefficient near 1.0 would provide support for my hypothesis, indicating that the market is a reliable predictor of reality. Conversely, a coefficient near zero, or a high degree of variance in which the actual scores frequently deviate widely from the spread, would disprove the hypothesis and suggest that NFL outcomes are too idiosyncratic for systematic market prediction.
+
+
+```{r}
+# 1. Load the necessary library
+library(tidyverse)
+
+# 2. Load the data from your 'data' folder
+# This assumes you followed the step of putting the csv in a folder named data
+nfl_data <- read_csv("data/spreadspoke_scores.csv")
+
+# 3. Meaningful Data Cleaning
+# We filter out games that haven't happened yet (NA scores) 
+# and create our outcome variable: actual_margin
+nfl_clean <- nfl_data %>%
+  filter(!is.na(score_home) & !is.na(score_away)) %>%
+  mutate(actual_margin = score_home - score_away) %>%
+  # Selecting just a few columns for the head() so it looks clean on your site
+  select(schedule_date, team_home, team_away, score_home, score_away, spread_favorite, actual_margin)
+
+# 4. Print the head of the dataset to the screen
+head(nfl_clean)
+```
+
+
+
