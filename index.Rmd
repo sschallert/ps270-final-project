@@ -23,7 +23,6 @@ This project utilizes the "NFL Scores and Betting Data" dataset to investigate t
 library(tidyverse)
 
 # 2. Load the data from your 'data' folder
-# This assumes you followed the step of putting the csv in a folder named data
 nfl_data <- read_csv("data/spreadspoke_scores.csv")
 
 # 3. Meaningful Data Cleaning
