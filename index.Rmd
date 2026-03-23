@@ -15,6 +15,7 @@ I am interested in exploring data related to sports and political voting based o
 
 ## Milestone 2: Research Proposal
  
+
 This project utilizes the "NFL Scores and Betting Data" dataset to investigate the relationship between market expectations and actual game outcomes. My research question asks: To what extent does the closing point spread set by oddsmakers predict the actual margin of victory in NFL games? I hypothesize that there is a strong, positive linear relationship between the spread and the final score margin. This hypothesis is rooted in the Efficient Market Hypothesis, which suggests that in a competitive environment with high financial stakes, betting lines will systematically incorporate all publicly available information regarding team strength, injuries, and conditions. My explanatory variable is the spread_favorite, which measures the number of points the favored team is expected to win by (ranging from -1 to -26.5 in this data). My outcome variable is the actual_margin, calculated as the home team's score minus the away team's score. A statistically significant, positive regression coefficient near 1.0 would provide support for my hypothesis, indicating that the market is a reliable predictor of reality. Conversely, a coefficient near zero, or a high degree of variance in which the actual scores frequently deviate widely from the spread, would disprove the hypothesis and suggest that NFL outcomes are too idiosyncratic for systematic market prediction.
 
 
