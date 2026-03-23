@@ -40,7 +40,7 @@ head(nfl_clean)
 
 ## Milestone 3:Data Cleanup
 
-```{r}
+```{r nfl-visualization, echo=FALSE, message=FALSE, warning=FALSE}
 # 1. Data Cleaning (Filtering for complete games and claulating margin)
 library(tidyverse)
 nfl_vis_data <- nfl_data %>%
