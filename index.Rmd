@@ -38,7 +38,7 @@ nfl_clean <- nfl_data %>%
 head(nfl_clean)
 ```
 
-## Milestone 3: Data Cleanup
+## Milestone 3:Data Cleanup
 
 ```{r}
 # 1. Data Cleaning (Filtering for complete games and claulating margin)
