@@ -1,5 +1,5 @@
 ---
-title: "PS270 Final Project"
+title: "PS 270 Final Project"
 author: "Sam Schallert"
 description: "My final project"
 output:
@@ -57,7 +57,7 @@ ggplot(nfl_vis_data, aes(x = spread_favorite, y = actual_margin)) +
     subtitle = "Data from 1966 to present",
     x = "Betting Spread (Points for Favorite)",
     y = "Actual Source Margin (Home - Away)", 
-    caption = "Source: NFL Scores and Betting Data(Kaggle)"
+    caption = "Source: NFL Scores and Betting Data (Kaggle)"
   ) +
   theme_minimal() +
   theme(plot.tittle = element_text(face = "bold", hjust = 0.5))
