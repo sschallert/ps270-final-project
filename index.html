@@ -116,7 +116,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   <!--/radix_placeholder_rmarkdown_metadata-->
   
   <script type="text/json" id="radix-resource-manifest">
-  {"type":"character","attributes":{},"value":["data/spreadspoke_scores.csv","index_files/anchor-4.2.2/anchor.min.js","index_files/bowser-1.9.3/bowser.min.js","index_files/distill-2.2.21/template.v2.js","index_files/header-attrs-2.17/header-attrs.js","index_files/header-attrs-2.30/header-attrs.js","index_files/jquery-3.6.0/jquery-3.6.0.js","index_files/jquery-3.6.0/jquery-3.6.0.min.js","index_files/jquery-3.6.0/jquery-3.6.0.min.map","index_files/popper-2.6.0/popper.min.js","index_files/tippy-6.2.7/tippy-bundle.umd.min.js","index_files/tippy-6.2.7/tippy-light-border.css","index_files/tippy-6.2.7/tippy.css","index_files/tippy-6.2.7/tippy.umd.min.js","index_files/webcomponents-2.0.0/webcomponents.js"]}
+  {"type":"character","attributes":{},"value":["data/spreadspoke_scores.csv","index_files/anchor-4.2.2/anchor.min.js","index_files/bowser-1.9.3/bowser.min.js","index_files/distill-2.2.21/template.v2.js","index_files/figure-html5/unnamed-chunk-2-1.png","index_files/header-attrs-2.17/header-attrs.js","index_files/header-attrs-2.30/header-attrs.js","index_files/jquery-3.6.0/jquery-3.6.0.js","index_files/jquery-3.6.0/jquery-3.6.0.min.js","index_files/jquery-3.6.0/jquery-3.6.0.min.map","index_files/popper-2.6.0/popper.min.js","index_files/tippy-6.2.7/tippy-bundle.umd.min.js","index_files/tippy-6.2.7/tippy-light-border.css","index_files/tippy-6.2.7/tippy.css","index_files/tippy-6.2.7/tippy.umd.min.js","index_files/webcomponents-2.0.0/webcomponents.js"]}
   </script>
   <!--radix_placeholder_navigation_in_header-->
   <!--/radix_placeholder_navigation_in_header-->
@@ -1565,7 +1565,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 <span>  <span class='co'># Selecting just a few columns for the head() so it looks clean on your site</span></span>
 <span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/select.html'>select</a></span><span class='op'>(</span><span class='va'>schedule_date</span>, <span class='va'>team_home</span>, <span class='va'>team_away</span>, <span class='va'>score_home</span>, <span class='va'>score_away</span>, <span class='va'>spread_favorite</span>, <span class='va'>actual_margin</span><span class='op'>)</span></span>
 <span></span>
-<span><span class='co'># 4. Print the head of the dataset to the screen</span></span>
+<span><span class='co'># 4. Print the head of the dataset</span></span>
 <span><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>nfl_clean</span><span class='op'>)</span></span></code></pre>
 </div>
 <pre><code># A tibble: 6 × 7
@@ -1579,6 +1579,32 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 6 9/10/1966     Houston Oilers     Oakland Raid…         31          0
 # ℹ 2 more variables: spread_favorite &lt;dbl&gt;, actual_margin &lt;dbl&gt;</code></pre>
 </div>
+<h2 id="milestone-3-data-cleanup">Milestone 3: Data Cleanup</h2>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'># 1. Data Cleaning (Filtering for complete games and claulating margin)</span></span>
+<span><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://tidyverse.tidyverse.org'>tidyverse</a></span><span class='op'>)</span></span>
+<span><span class='va'>nfl_vis_data</span> <span class='op'>&lt;-</span> <span class='va'>nfl_data</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
+<span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span><span class='op'>(</span><span class='op'>!</span><span class='fu'><a href='https://rdrr.io/r/base/NA.html'>is.na</a></span><span class='op'>(</span><span class='va'>score_home</span><span class='op'>)</span> <span class='op'>&amp;</span> <span class='op'>!</span><span class='fu'><a href='https://rdrr.io/r/base/NA.html'>is.na</a></span><span class='op'>(</span><span class='va'>spread_favorite</span><span class='op'>)</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
+<span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span><span class='op'>(</span>actual_margin <span class='op'>=</span> <span class='va'>score_home</span> <span class='op'>-</span> <span class='va'>score_away</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='co'># 2. Create a Polished Visualization</span></span>
+<span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span><span class='va'>nfl_vis_data</span>, <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>spread_favorite</span>, y <span class='op'>=</span> <span class='va'>actual_margin</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_point.html'>geom_point</a></span><span class='op'>(</span>alpha <span class='op'>=</span> <span class='fl'>0.3</span>, color <span class='op'>=</span> <span class='st'>"steelblue"</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_smooth.html'>geom_smooth</a></span><span class='op'>(</span>method <span class='op'>=</span> <span class='st'>"lm"</span>, color <span class='op'>=</span> <span class='st'>"red"</span>, se <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/labs.html'>labs</a></span><span class='op'>(</span></span>
+<span>    title <span class='op'>=</span> <span class='st'>"Market Accuracy: NFL Point Spreads vs Actual Margins"</span>,</span>
+<span>    subtitle <span class='op'>=</span> <span class='st'>"Data from 1966 to present"</span>,</span>
+<span>    x <span class='op'>=</span> <span class='st'>"Betting Spread (Points for Favorite)"</span>,</span>
+<span>    y <span class='op'>=</span> <span class='st'>"Actual Source Margin (Home - Away)"</span>, </span>
+<span>    caption <span class='op'>=</span> <span class='st'>"Source: NFL Scores and Betting Data(Kaggle)"</span></span>
+<span>  <span class='op'>)</span> <span class='op'>+</span></span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggtheme.html'>theme_minimal</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/theme.html'>theme</a></span><span class='op'>(</span>plot.tittle <span class='op'>=</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/element.html'>element_text</a></span><span class='op'>(</span>face <span class='op'>=</span> <span class='st'>"bold"</span>, hjust <span class='op'>=</span> <span class='fl'>0.5</span><span class='op'>)</span><span class='op'>)</span></span></code></pre>
+</div>
+<p><img src="index_files/figure-html5/unnamed-chunk-2-1.png" alt="" width="624" /></p>
+</div>
+<p>To prepare this data for analysis, I performed several cleaning steps to ensure accuracy. First, I filtered the dataset to remove any games with missing scores or missing betting spreads, ensuring the regression model would only utilize complete observations. I then used a mutation to calculate the actual_margin of each game (Home Score minus Away Score), which serves as my dependent variable. The visualization below displays a scatter plot of the spread_favorite against the actual_margin. I have included a linear regression line (red) to illustrate the systematic relationship between these two variables. This “polished” visualization allows us to see the density of the data: while there is a clear positive correlation (supporting the idea that oddsmakers are generally accurate), the high degree of “noise” or “spread” around the line suggests that individual NFL games frequently deviate from market expectations due to idiosyncratic factors like turnovers or weather.</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
 <!--radix_placeholder_article_footer-->
 <!--/radix_placeholder_article_footer-->
