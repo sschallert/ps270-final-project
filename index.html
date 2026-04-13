@@ -1584,6 +1584,57 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 <p><img src="index_files/figure-html5/nfl-visualization-1.png" alt="" width="624" /></p>
 </div>
 <p>To prepare this data for analysis, I performed several cleaning steps to ensure accuracy. First, I filtered the dataset to remove any games with missing scores or missing betting spreads, ensuring the regression model would only utilize complete observations. I then used a mutation to calculate the actual_margin of each game (Home Score minus Away Score), which serves as my dependent variable. The visualization below displays a scatter plot of the spread_favorite against the actual_margin. I have included a linear regression line (red) to illustrate the systematic relationship between these two variables. This “polished” visualization allows us to see the density of the data: while there is a clear positive correlation (supporting the idea that oddsmakers are generally accurate), the high degree of “noise” or “spread” around the line suggests that individual NFL games frequently deviate from market expectations due to idiosyncratic factors like turnovers or weather.</p>
+<h2 id="milestone-4">Milestone 4</h2>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://broom.tidymodels.org/'>broom</a></span><span class='op'>)</span></span>
+<span><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://yihui.org/knitr/'>knitr</a></span><span class='op'>)</span></span>
+<span></span>
+<span><span class='va'>nfl_model</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span><span class='op'>(</span><span class='va'>actual_margin</span> <span class='op'>~</span> <span class='va'>spread_favorite</span>, data <span class='op'>=</span> <span class='va'>nfl_vis_data</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='va'>model_results</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://generics.r-lib.org/reference/tidy.html'>tidy</a></span><span class='op'>(</span><span class='va'>nfl_model</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
+<span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/rename.html'>rename</a></span><span class='op'>(</span></span>
+<span>    Term <span class='op'>=</span> <span class='va'>term</span>,</span>
+<span>    Estimate <span class='op'>=</span> <span class='va'>estimate</span>,</span>
+<span>    `Std. Error` <span class='op'>=</span> <span class='va'>std.error</span>,</span>
+<span>    `Statistic` <span class='op'>=</span> <span class='va'>statistic</span>,</span>
+<span>    `P-Value` <span class='op'>=</span> <span class='va'>p.value</span></span>
+<span>  <span class='op'>)</span></span>
+<span></span>
+<span><span class='fu'><a href='https://rdrr.io/pkg/knitr/man/kable.html'>kable</a></span><span class='op'>(</span><span class='va'>model_results</span>, </span>
+<span>      digits <span class='op'>=</span> <span class='fl'>3</span>, </span>
+<span>      caption <span class='op'>=</span> <span class='st'>"Linear Regression Results: Predicting Margin via Spread"</span><span class='op'>)</span></span></code></pre>
+</div>
+<table>
+<caption><span id="tab:unnamed-chunk-2">Table 1: </span>Linear Regression Results: Predicting Margin via Spread</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Term</th>
+<th style="text-align: right;">Estimate</th>
+<th style="text-align: right;">Std. Error</th>
+<th style="text-align: right;">Statistic</th>
+<th style="text-align: right;">P-Value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: right;">-1.198</td>
+<td style="text-align: right;">0.222</td>
+<td style="text-align: right;">-5.401</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">spread_favorite</td>
+<td style="text-align: right;">-0.669</td>
+<td style="text-align: right;">0.032</td>
+<td style="text-align: right;">-20.823</td>
+<td style="text-align: right;">0</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>To answer my research question, I performed a linear regression to quantify how well the point spread predicts the actual margin of victory. The regression results in Table 1 provide the formal answer to my research question. The Estimate for the spread_favorite represents the predictive power of the market. Since the P-Value is less than 0.05, the relationship is statistically significant, supporting my hypothesis that the closing spread is a reliable predictor of the final margin. While individual games are volatile, the market systematically incorporates available information to accurately forecast outcomes on average.</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
 <!--radix_placeholder_article_footer-->
 <!--/radix_placeholder_article_footer-->

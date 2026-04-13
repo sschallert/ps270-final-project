@@ -42,13 +42,12 @@ head(nfl_clean)
 ## Milestone 3:Data Cleanup
 
 ```{r nfl-visualization, echo=FALSE, message=FALSE, warning=FALSE}
-# 1. Data Cleaning (Filtering for complete games and claulating margin)
+
 library(tidyverse)
 nfl_vis_data <- nfl_data %>%
   filter(!is.na(score_home) & !is.na(spread_favorite)) %>%
   mutate(actual_margin = score_home - score_away)
 
-# 2. Create a Polished Visualization
 ggplot(nfl_vis_data, aes(x = spread_favorite, y = actual_margin)) +
   geom_point(alpha = 0.3, color = "steelblue") +
   geom_smooth(method = "lm", color = "red", se = TRUE) +
@@ -60,10 +59,33 @@ ggplot(nfl_vis_data, aes(x = spread_favorite, y = actual_margin)) +
     caption = "Source: NFL Scores and Betting Data (Kaggle)"
   ) +
   theme_minimal() +
-  theme(plot.tittle = element_text(face = "bold", hjust = 0.5))
+  theme(plot.title = element_text(face = "bold", hjust = 0.5))
 ```
 
 To prepare this data for analysis, I performed several cleaning steps to ensure accuracy. First, I filtered the dataset to remove any games with missing scores or missing betting spreads, ensuring the regression model would only utilize complete observations. I then used a mutation to calculate the actual_margin of each game (Home Score minus Away Score), which serves as my dependent variable. The visualization below displays a scatter plot of the spread_favorite against the actual_margin. I have included a linear regression line (red) to illustrate the systematic relationship between these two variables. This "polished" visualization allows us to see the density of the data: while there is a clear positive correlation (supporting the idea that oddsmakers are generally accurate), the high degree of "noise" or "spread" around the line suggests that individual NFL games frequently deviate from market expectations due to idiosyncratic factors like turnovers or weather.
 
 
+## Milestone 4
 
+
+```{r}
+library(broom)
+library(knitr)
+
+nfl_model <- lm(actual_margin ~ spread_favorite, data = nfl_vis_data)
+
+model_results <- tidy(nfl_model) %>%
+  rename(
+    Term = term,
+    Estimate = estimate,
+    `Std. Error` = std.error,
+    `Statistic` = statistic,
+    `P-Value` = p.value
+  )
+
+kable(model_results, 
+      digits = 3, 
+      caption = "Linear Regression Results: Predicting Margin via Spread")
+```
+
+To answer my research question, I performed a linear regression to quantify how well the point spread predicts the actual margin of victory. The regression results in Table 1 provide the formal answer to my research question. The Estimate for the spread_favorite represents the predictive power of the market. Since the P-Value is less than 0.05, the relationship is statistically significant, supporting my hypothesis that the closing spread is a reliable predictor of the final margin. While individual games are volatile, the market systematically incorporates available information to accurately forecast outcomes on average.
