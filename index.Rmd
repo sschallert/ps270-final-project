@@ -25,7 +25,9 @@ This project uses a cross-sectional design. The main outcome variable is the act
 
 ## Data Visualization (Figure 1)
 
-```{r}
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
+
 library(tidyverse)
 nfl_data <- read_csv("data/spreadspoke_scores.csv")
 nfl_clean <- nfl_data |>
@@ -46,7 +48,9 @@ Figure 1: This figure shows the distribution of actual score margins in the NFL.
 
 ## Data Visualization (Figure 2)
 
-```{r}
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
+
 nfl_clean |>
   mutate(outcome_type = if_else(actual_margin > 0, "Home Win", "Away Win/Tie")) |>
   count(outcome_type) |>
@@ -63,7 +67,9 @@ Figure 2: This figure shows the number of games resulting in a home win versus a
 
 ## Market Summary Table
 
-```{r}
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
+
 library(knitr)
 nfl_clean |>
   mutate(decade = (schedule_season %/% 10) * 10) |>
@@ -77,7 +83,9 @@ nfl_clean |>
 
 ## Data Visualization (Figure 3)
 
-```{r}
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
+
 ggplot(nfl_clean, aes(x = spread_favorite, y = actual_margin)) +
   geom_point(alpha = 0.1, color = "gray") +
   geom_smooth(method = "lm", color = "red") +
@@ -96,7 +104,9 @@ The data visualization indicates that while the market is generally accurate on 
 
 ## Regression Table
 
-```{r}
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
+
 library(broom)
 reg_nfl <- lm(actual_margin ~ spread_favorite, data = nfl_clean)
 
