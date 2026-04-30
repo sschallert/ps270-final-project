@@ -1,7 +1,7 @@
 ---
-title: "PS 270 Final Project"
+title: "The Efficiency of NFL Betting Markets: An Analysis of Point Spreads and Game Outcomes"
 author: "Sam Schallert"
-description: "My final project"
+description: "This project examines the relationship between NFL betting spreads and actual game outcomes. By comparing oddsmaker expectations to final score margins, I test whether the betting market effectively prices in all available information or if NFL results are too random to be predicted accurately."
 output:
   distill::distill_article:
     self_contained: false
@@ -9,83 +9,116 @@ output:
 
 
 
-## Project thoughts
+## Introduction 
 
-I am interested in exploring data related to sports and political voting based on party/ideals. Both these topics intrest me and I feel there is a lot of data about each of them. 
+In this project, I will look at the trends of sports betting and game outcomes using the “NFL Scores and Betting Data” dataset. This dataset includes professional football scores and the corresponding point spreads from 1966 to the present. My research question for this project is: To what extent does the closing point spread set by oddsmakers predict the actual margin of victory in NFL games? My hypothesis is that there is a strong, positive linear relationship between the spread and the final score margin because betting markets aim to incorporate all available information to maintain efficiency.
 
-## Milestone 2: Research Proposal
- 
+In order to determine market accuracy, the primary explanatory variable is ‘spread_favorite’, which is the number of points the favored team is expected to win by. The outcome variable is ‘actual_margin’, which is calculated as the home team’s score minus the away team’s score. A statistically significant, positive correlation would indicate that the market is a reliable predictor of reality. If the actual scores frequently deviate widely from the spread without a clear trend, the hypothesis would be refuted.
 
-This project utilizes the "NFL Scores and Betting Data" dataset to investigate the relationship between market expectations and actual game outcomes. My research question asks: To what extent does the closing point spread set by oddsmakers predict the actual margin of victory in NFL games? I hypothesize that there is a strong, positive linear relationship between the spread and the final score margin. This hypothesis is rooted in the Efficient Market Hypothesis, which suggests that in a competitive environment with high financial stakes, betting lines will systematically incorporate all publicly available information regarding team strength, injuries, and conditions. My explanatory variable is the spread_favorite, which measures the number of points the favored team is expected to win by (ranging from -1 to -26.5 in this data). My outcome variable is the actual_margin, calculated as the home team's score minus the away team's score. A statistically significant, positive regression coefficient near 1.0 would provide support for my hypothesis, indicating that the market is a reliable predictor of reality. Conversely, a coefficient near zero, or a high degree of variance in which the actual scores frequently deviate widely from the spread, would disprove the hypothesis and suggest that NFL outcomes are too idiosyncratic for systematic market prediction.
+This topic is important because it tests the limits of market efficiency in a high-variance, real-world setting. Unlike financial markets which can be influenced by abstract speculation, sports outcomes are determined by physical performance and tangible events. By analyzing this relationship, we can determine if the "wisdom of the crowd" in a betting market is actually effective at neutralizing noise and predicting results in complex systems. Understanding whether these markets are accurate, or if outcomes are just basically random has significant implications for both behavioral economics and sports analytics.
 
+## Data 
+
+## Load the Data
+
+This project uses a cross-sectional design. The main outcome variable is the actual margin of victory. My hypothesis would be supported if the actual margin closely tracks the betting spread across the thousands of games recorded in the dataset.
+
+## Data Visualization (Figure 1)
 
 ```{r}
-# 1. Load the necessary library
 library(tidyverse)
-
-# 2. Load the data from your 'data' folder
 nfl_data <- read_csv("data/spreadspoke_scores.csv")
-
-# 3. Meaningful Data Cleaning
-# We filter out games that haven't happened yet (NA scores) 
-# and create our outcome variable: actual_margin
-nfl_clean <- nfl_data %>%
-  filter(!is.na(score_home) & !is.na(score_away)) %>%
-  mutate(actual_margin = score_home - score_away) %>%
-  # Selecting just a few columns for the head() so it looks clean on your site
-  select(schedule_date, team_home, team_away, score_home, score_away, spread_favorite, actual_margin)
-
-# 4. Print the head of the dataset
-head(nfl_clean)
-```
-
-## Milestone 3:Data Cleanup
-
-```{r nfl-visualization, echo=FALSE, message=FALSE, warning=FALSE}
-
-library(tidyverse)
-nfl_vis_data <- nfl_data %>%
-  filter(!is.na(score_home) & !is.na(spread_favorite)) %>%
+nfl_clean <- nfl_data |>
+  filter(!is.na(score_home) & !is.na(score_away) & !is.na(spread_favorite)) |>
   mutate(actual_margin = score_home - score_away)
 
-ggplot(nfl_vis_data, aes(x = spread_favorite, y = actual_margin)) +
-  geom_point(alpha = 0.3, color = "steelblue") +
-  geom_smooth(method = "lm", color = "red", se = TRUE) +
-  labs(
-    title = "Market Accuracy: NFL Point Spreads vs Actual Margins",
-    subtitle = "Data from 1966 to present",
-    x = "Betting Spread (Points for Favorite)",
-    y = "Actual Source Margin (Home - Away)", 
-    caption = "Source: NFL Scores and Betting Data (Kaggle)"
-  ) +
-  theme_minimal() +
-  theme(plot.title = element_text(face = "bold", hjust = 0.5))
+ggplot(nfl_clean, aes(x = actual_margin)) +
+  geom_histogram(fill = "steelblue", color = "white", bins = 30) +
+  labs(title = "Distribution of NFL Actual Score Margins",
+       x = "Actual Margin (Home - Away)",
+       y = "Frequency") +
+  theme_minimal()
 ```
 
-To prepare this data for analysis, I performed several cleaning steps to ensure accuracy. First, I filtered the dataset to remove any games with missing scores or missing betting spreads, ensuring the regression model would only utilize complete observations. I then used a mutation to calculate the actual_margin of each game (Home Score minus Away Score), which serves as my dependent variable. The visualization below displays a scatter plot of the spread_favorite against the actual_margin. I have included a linear regression line (red) to illustrate the systematic relationship between these two variables. This "polished" visualization allows us to see the density of the data: while there is a clear positive correlation (supporting the idea that oddsmakers are generally accurate), the high degree of "noise" or "spread" around the line suggests that individual NFL games frequently deviate from market expectations due to idiosyncratic factors like turnovers or weather.
+
+Figure 1: This figure shows the distribution of actual score margins in the NFL. The margins are centered around zero, but the "spikes" at certain intervals show how common scoring patterns (like 3 and 7 points) influence game outcomes.
 
 
-## Milestone 4
+## Data Visualization (Figure 2)
 
+```{r}
+nfl_clean |>
+  mutate(outcome_type = if_else(actual_margin > 0, "Home Win", "Away Win/Tie")) |>
+  count(outcome_type) |>
+  ggplot(aes(x = outcome_type, y = n, fill = outcome_type)) +
+  geom_col() +
+  labs(x = "Game Outcome", y = "Number of Games", title = "Frequency of Home vs. Away Victories") +
+  theme_minimal() + theme(legend.position = "none")
+```
+
+Figure 2: This figure shows the number of games resulting in a home win versus an away win or tie. This provides a baseline for understanding how the home-field advantage (which oddsmakers account for) plays into the final dataset.
+
+
+## Results Section 
+
+## Market Summary Table
+
+```{r}
+library(knitr)
+nfl_clean |>
+  mutate(decade = (schedule_season %/% 10) * 10) |>
+  group_by(decade) |>
+  summarize(avg_spread = mean(spread_favorite),
+            avg_margin = mean(actual_margin)) |>
+  kable(col.names = c("Decade", "Average Spread", "Average Actual Margin"),
+        digits = 2, caption = "Historical Trends in Spreads and Margins")
+```
+
+
+## Data Visualization (Figure 3)
+
+```{r}
+ggplot(nfl_clean, aes(x = spread_favorite, y = actual_margin)) +
+  geom_point(alpha = 0.1, color = "gray") +
+  geom_smooth(method = "lm", color = "red") +
+  labs(title = "Trend of Point Spreads vs. Actual Margins",
+       x = "Betting Spread (Explanatory)",
+       y = "Actual Margin (Outcome)") +
+  theme_minimal()
+```
+
+Figure 3: This figure displays the relationship between the point spread and the actual margin. While the red line indicates a clear positive trend, the high density of points scattered far from the line shows that individual games often deviate from market expectations.
+
+
+## Analysis
+
+The data visualization indicates that while the market is generally accurate on average, there is a significant amount of noise. My hypothesis was that growing market efficiency would lead to spreads being very tight predictors, but the results show that football is still subject to high levels of variance. By looking at the scatterplot, we can see that even when a team is favored heavily, they sometimes lose outright. This suggests that while oddsmakers are smart, they cannot account for the "any given Sunday" nature of the NFL where turnovers or injuries change everything. Therefore, the evidence supports the theory that the market is efficient, but it also highlights how unpredictable individual sports outcomes remain.
+
+## Regression Table
 
 ```{r}
 library(broom)
-library(knitr)
+reg_nfl <- lm(actual_margin ~ spread_favorite, data = nfl_clean)
 
-nfl_model <- lm(actual_margin ~ spread_favorite, data = nfl_vis_data)
-
-model_results <- tidy(nfl_model) %>%
-  rename(
-    Term = term,
-    Estimate = estimate,
-    `Std. Error` = std.error,
-    `Statistic` = statistic,
-    `P-Value` = p.value
-  )
-
-kable(model_results, 
-      digits = 3, 
-      caption = "Linear Regression Results: Predicting Margin via Spread")
+tidy(reg_nfl) |>
+  mutate(term = if_else(term == "spread_favorite", "Point Spread", "Intercept")) |>
+  kable(digits = 3, 
+        col.names = c("Term", "Coefficient", "Standard Error", "t value", "p value"))
 ```
 
-To answer my research question,  I performed a linear regression to quantify how well the point spread predicts the actual margin of victory. The regression results in Table 1 provide the formal answer to my research question. The Estimate for the spread_favorite represents the predictive power of the market. Since the P-Value is less than 0.05, the relationship is statistically significant, supporting my hypothesis that the closing spread is a reliable predictor of the final margin. While individual games are volatile, the market systematically incorporates available information to accurately forecast outcomes on average.
+
+## Interpretation 
+
+The regression model shows a relationship between the betting spread and the actual margin, with a coefficient of about -0.78, note that this is negative because a "favorite" spread is usually a negative number in this dataset). This means that for every 1-point increase in the spread, the actual margin moves significantly in that direction. The p-value for the Point Spread is 0.000, which is less than 0.05, indicating that the relationship is statistically significant. This means there is strong evidence that the spread is a reliable predictor. This relationship should not be interpreted as causal because the spread doesn't "cause" the points; rather, both are caused by team talent.
+
+
+## Conclusion 
+
+
+## Final Conclusion 
+
+Overall, the results support my hypothesis that the betting spread is a reliable predictor of NFL outcomes. The relationship is statistically significant and substantively large enough to prove the market is efficient. One limitation is that the dataset doesn't account for mid-game injuries that happen after the spread is locked. Another limitation is that the model only uses the spread, ignoring weather or travel distance which could be confounders. These limitations threaten inference because uncalculated variables could influence the game differently than the market expected. The analysis could be improved by collecting weather data and seeing if market accuracy drops during snow or rain games.
+
+## AI Disclousure
+
+I used AI tools to help format my regression table and structure the interpretation to ensure the statistical language was used correctly. I also used AI to help debug an "object not found" error during the data cleaning process. Some AI was used to fix syntax errors in some of the code. 
