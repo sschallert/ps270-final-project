@@ -25,7 +25,8 @@ This project uses a cross-sectional design. The main outcome variable is the act
 
 ## Data Visualization (Figure 1)
 
-```{r setup, echo = FALSE}
+```{r print-code, ref.label=knitr::all_labels(), echo = TRUE, eval=FALSE}
+
 
 library(tidyverse)
 nfl_data <- read_csv("data/spreadspoke_scores.csv")
@@ -47,7 +48,8 @@ Figure 1: This figure shows the distribution of actual score margins in the NFL.
 
 ## Data Visualization (Figure 2)
 
-```{r setup, echo = FALSE}
+```{r print-code, ref.label=knitr::all_labels(), echo = TRUE, eval=FALSE}
+
 
 nfl_clean |>
   mutate(outcome_type = if_else(actual_margin > 0, "Home Win", "Away Win/Tie")) |>
@@ -65,7 +67,8 @@ Figure 2: This figure shows the number of games resulting in a home win versus a
 
 ## Market Summary Table
 
-```{r setup, echo = FALSE}
+```{r print-code, ref.label=knitr::all_labels(), echo = TRUE, eval=FALSE}
+
 
 library(knitr)
 nfl_clean |>
@@ -80,7 +83,9 @@ nfl_clean |>
 
 ## Data Visualization (Figure 3)
 
-```{r setup, echo = FALSE}
+```{r print-code, ref.label=knitr::all_labels(), echo = TRUE, eval=FALSE}
+
+
 
 ggplot(nfl_clean, aes(x = spread_favorite, y = actual_margin)) +
   geom_point(alpha = 0.1, color = "gray") +
@@ -100,7 +105,8 @@ The data visualization indicates that while the market is generally accurate on 
 
 ## Regression Table
 
-```{r setup, echo = FALSE}
+
+```{r print-code, ref.label=knitr::all_labels(), echo = TRUE, eval=FALSE}
 
 library(broom)
 reg_nfl <- lm(actual_margin ~ spread_favorite, data = nfl_clean)
@@ -110,6 +116,7 @@ tidy(reg_nfl) |>
   kable(digits = 3, 
         col.names = c("Term", "Coefficient", "Standard Error", "t value", "p value"))
 ```
+
 
 
 ## Interpretation 
