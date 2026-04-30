@@ -25,7 +25,7 @@ This project uses a cross-sectional design. The main outcome variable is the act
 
 ## Data Visualization (Figure 1)
 
-```{r, echo=FALSE}
+```{r,echo=FALSE}
 
 
 library(tidyverse)
@@ -48,7 +48,7 @@ Figure 1: This figure shows the distribution of actual score margins in the NFL.
 
 ## Data Visualization (Figure 2)
 
-```{r, echo=FALSE}
+```{r,echo=FALSE}
 
 
 nfl_clean |>
@@ -67,7 +67,7 @@ Figure 2: This figure shows the number of games resulting in a home win versus a
 
 ## Market Summary Table
 
-```{r, echo=FALSE}
+```{r,echo=FALSE}
 
 
 library(knitr)
@@ -83,7 +83,7 @@ nfl_clean |>
 
 ## Data Visualization (Figure 3)
 
-```{r, echo=FALSE}
+```{r,echo=FALSE}
 
 
 
@@ -106,7 +106,7 @@ The data visualization indicates that while the market is generally accurate on 
 ## Regression Table
 
 
-```{r, echo=FALSE}
+```{r,echo=FALSE}
 
 library(broom)
 reg_nfl <- lm(actual_margin ~ spread_favorite, data = nfl_clean)
@@ -136,6 +136,5 @@ Overall, the results support my hypothesis that the betting spread is a reliable
 I used AI tools to help format my regression table and structure the interpretation to ensure the statistical language was used correctly. I also used AI to help debug an "object not found" error during the data cleaning process. Some AI was used to fix syntax errors in some of the code. 
 
 ```{r print-code, ref.label=knitr::all_labels(), echo = TRUE, eval=FALSE}
-
 
 ```
